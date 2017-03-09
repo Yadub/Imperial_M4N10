@@ -24,7 +24,7 @@ while residual > tol
                         + (dr2 - rdr) * u(m-1, n) + r2dt2 * (u(m, n+1) ...
                         + u(m, mod(n-2, N)+1)) + S(m, n)) * w / sumdr2dt2;
         end
-        u(m,N+1) = u(m, 1);           % BC: Periodic (Dirichlet)
+        u(m,N+1) = u(m, 1);           % BC: Periodic
     end
     u(M+2,:) = u(M,:);                % BC: Insulating (Neumann)
 

@@ -15,8 +15,8 @@ theta = 0:dtheta:2*pi;  % Initialize theta array
 p = 3;                  % Set value of p
 u0 = zeros(M+2,N+1);    % Initialize initial u
 u0(1,1:N) = (1 - b)^2 * sin( p * theta(1:N) ); % BC: u(1,theta)
-u0(M+2,:) = u0(M,:);    % BC: Insulation (Dirichlet)
-u0(:,N+1) = u0(:,1);    % BC: Periodic(Neumann)
+u0(M+2,:) = u0(M,:);    % BC: Insulation (Neumann)
+u0(:,N+1) = u0(:,1);    % BC: Periodic
 
 % The exact solution
 S = zeros(M+1,N+1);     % Initalize the forcing term S

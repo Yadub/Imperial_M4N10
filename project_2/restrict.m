@@ -20,8 +20,10 @@ coarse(2:M2,1:N2) =  1/4*fine(3:2:M-1,  1:2:N-1) + ...
                       1/16*fine(4:2:M,  2:2:N);
 coarse(M2+2, :) = coarse(M2, :); % BC: Insulating (Neumann)
 
-dr2 = dr * 2;
-dtheta2 = dtheta * 2;
-r2 = r(1:2:M+1);
+if nargout > 1
+    dr2 = dr * 2;
+    dtheta2 = dtheta * 2;
+    r2 = r(1:2:M+1);
+end
 
 end

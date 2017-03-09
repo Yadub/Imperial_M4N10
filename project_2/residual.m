@@ -19,7 +19,7 @@ for m = 2:M+1
             + (dr2 - rdr) * u(m-1, n) + r2dt2 * (u(m, n+1) ...
             + u(m, mod(n-2, N)+1)));
     end
-    res(m, N+1) = res(m, 1); % BC: Periodic (Dirichlet)
+    res(m, N+1) = res(m, 1); % BC: Periodic
 end
 res(M+2, :) = res(M, :); % BC: Insulating (Neumann)
 

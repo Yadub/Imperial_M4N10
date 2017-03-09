@@ -8,12 +8,8 @@ if nargin < 6   % Incase number of V cycles hasn't been specified
     NV = 1;
 end
 
-[Mp2,Np1] = size(u0);   % Extract M and N
-M = Mp2 - 2;
-N = Np1 - 1;
-
 % Do Multigrid V-cycles
-for k=1:NV
+for k = 1:NV
     u0 = MultiGridV( u0, f, dr, dtheta, r);
 end
 

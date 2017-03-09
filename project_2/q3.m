@@ -14,7 +14,7 @@ p = 3;                  % Set value of p for f(theta)
 u0 = zeros(M+2,N+1);    % Initialize initial u
 u0(1,1:N) = (1 - b)^2 * sin( p * theta(1:N) ); % BC: u(1,theta)
 u0(M+2,:) = u0(M,:);    % BC: Insulation (Neumann)
-u0(:,N+1) = u0(:,1);    % BC: Periodic (Dirichlet)
+u0(:,N+1) = u0(:,1);    % BC: Periodic
 
 % The exact solution
 S = zeros(M+1,N+1);     % Initalize the forcing term S
@@ -27,8 +27,16 @@ for m = 1:M+1
   end
 end
 
+tol = 1e-4; % Tolerance level for the residual
+largest_residual = 1; 
+NV = 0;
 tic; % Compute the solution and time taken
-[u, largest_residual] = FMGV( u0, S, dr, dtheta, r, 2); % Source term is f
+[u0, largest_residual] = FullMG(S, b, u0(1,:));  % Multigrif for inital loop
+while largest_residual > tol                    % V loops until residual small
+    [u, largest_residual] = FMGV( u0, S, dr, dtheta, r, 1);
+    u0 = u;
+    NV = NV + 1;
+end
 time_taken = toc
 
 % Get x-y grid
@@ -46,7 +54,18 @@ subplot(1,2,2);
 contour(x,y,u(1:M+1, 1:N+1)', 50);
 title('Estimated Solution');
 
+fig_3D = figure();
+surf(x,y,u(1:M+1,:)')
+xlabel('x','FontSize',18)
+ylabel('y','FontSize',18)
+zlabel('u','FontSize',18)
+grid off
+lighting phong
+camlight headlight
+camlight right
+
 % Method accuracy
 Errors = abs(U-u(1:M+1, 1:N+1));
-display(largest_residual)
 largest_difference = max(max(Errors))
+display(largest_residual)
+display(NV)
