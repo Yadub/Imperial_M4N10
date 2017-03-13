@@ -13,12 +13,11 @@ res = 1;
 while res > tol
     % Calculate new iterates of u
     for m = 2:M+1
+        dr2 = 1 / dr^2;
+        r2dt2 = 1 / r(m)^2 * 1 / dtheta^2;
+        rdr = 1 / r(m) * 1 / ( 2 * dr );
+        sumdr2dt2 = 2 * (dr2 + r2dt2);
         for n = 1:N
-            dr2 = 1 / dr^2;
-            r2dt2 = 1 / r(m)^2 * 1 / dtheta^2;
-            rdr = 1 / r(m) * 1 / ( 2 * dr );
-            sumdr2dt2 = 2 * (dr2 + r2dt2);
-
             u(m, n) = (1 - w) * u(m, n) + ((dr2 + rdr) * u(m+1, n) ...
                         + (dr2 - rdr) * u(m-1, n) + r2dt2 * (u(m, n+1) ...
                         + u(m, mod(n-2, N)+1)) - f(m, n)) * w / sumdr2dt2;

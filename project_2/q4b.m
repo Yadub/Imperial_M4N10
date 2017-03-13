@@ -1,8 +1,8 @@
 % Yadu Bhageria
 % 00733164
-b = 10;                 % Chosen value of b
-M = 2^7;                % Set M
-N = 2^7;                % Set N
+b = 5;                 % Chosen value of b
+M = 2^8;                % Set M
+N = 2^8;                % Set N
 
 dr = (b - 1) / M;       % Set delta
 dtheta = 2 * pi / N;    % Set delta theta
@@ -10,22 +10,12 @@ dtheta = 2 * pi / N;    % Set delta theta
 r = 1:dr:b;             % Initialize r array
 theta = 0:dtheta:2*pi;  % Initialize theta array
 
-p = 3;                  % Set value of p for f(theta)
 u0 = zeros(M+2,N+1);    % Initialize initial u
 u0(1,1:N) = sin( 3 * theta(1:N)/2 ); % BC: u(1,theta)
 u0(M+2,:) = u0(M,:);    % BC: Insulation (Neumann)
 u0(:,N+1) = u0(:,1);    % BC: Periodic
 
-% % The exact solution
 S = zeros(M+1,N+1);     % Initalize the forcing term S
-% U = zeros(M+1,N+1);     % Initialize exact solution of u
-% for m = 1:M+1
-%   for n = 1:N+1
-%     U(m,n) = ( (r(m) - b)^2 ) / r(m) * sin( p * theta(n) );
-%     S(m,n) = ( 2 * b * p^2 / r(m) + (1 - p^2) * (1 + b^2 / r(m)^2) ) ...
-%         * sin(p * theta(n)) / r(m);
-%   end
-% end
 
 tol = 1e-8; % Tolerance level for the residual
 NV = 0;
@@ -38,12 +28,15 @@ while largest_residual > tol                    % V loops until residual small
 end
 time_taken = toc
 
-display(largest_residual);
-
 % Get x-y grid
 [R, Theta] = meshgrid(r, theta);
 x = R.*cos(Theta);
 y = R.*sin(Theta);
+
+fig_contour = figure();
+contour(x,y,u(1:M+1,:)');
+title('Estimated Solution: Part b'); xlabel('x'); ylabel('y');
+colorbar;
 
 fig_3D = figure();
 surf(x,y,u(1:M+1,:)')
