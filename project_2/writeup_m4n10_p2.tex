@@ -143,7 +143,7 @@ The centred finite difference approximation of the problem is
 		S(r,\theta) = - \frac{\sin(p \theta)}{r} [ (\frac{b^2}{r^2} + 1)(1 - p^2) + \frac{2bp^2}{r} ] 
 	\end{equation*}
 	
-	I now try and solve $\nabla^2 u = S(r,\theta)$ iteratively using the Jacobi-iteration scheme. The problem has been set up in \texttt{q1.m} and solved using \texttt{Jacobi.m}. Convergence of the result is assessed by looking at the residual of the iterative scheme. If it is under a prescribed tolerance level then I stop iterating. To assess the accuracy of the results, the average error has been recorded, i.e. the average difference between the true solution and the computed solution over all the solution space $M+1 \times N$.
+	I now try and solve $\nabla^2 u = -S(r,\theta)$ iteratively using the Jacobi-iteration scheme. The problem has been set up in \texttt{q1.m} and solved using \texttt{Jacobi.m}. Convergence of the result is assessed by looking at the residual of the iterative scheme. If it is under a prescribed tolerance level then I stop iterating. To assess the accuracy of the results, the average error has been recorded, i.e. the average difference between the true solution and the computed solution over all the solution space $M+1 \times N$.
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\begin{figure}[h!]
@@ -220,7 +220,7 @@ The centred finite difference approximation of the problem is
 	\end{table}
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-	The optimal value of $\omega $ is near $\omega \approx 2$ but definitely not $\omega > 2$ or else the scheme becomes unstable. This can be seen in Figure 4 where the number of iterations needed are much larger for smaller values of $\omega$. Doing a finer linear search between $1.9 and 2.0$ gives the results for table 3. It can be seen that there is some variation in the optimal value of $\omega$ for various values of $M$ and $N$.
+	The optimal value of $\omega $ is near $\omega \approx 2$ but definitely not $\omega > 2$ or else the scheme becomes unstable. This can be seen in Figure 4 where the number of iterations needed are much larger for smaller values of $\omega$. Doing a finer linear search between $1.8$ and $2.0$ gives the results for table 3. It can be seen that there is some variation in the optimal value of $\omega$ for various values of $M$ and $N$.
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\begin{figure}[h!]
@@ -230,7 +230,31 @@ The centred finite difference approximation of the problem is
 	\end{figure}
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	 
-	%TABLE
+	Table 3 shows that there is some difference in the optimal value of $\omega$ when swapping the order of the iteration in the dimensions for the SOR method. This difference starts to occur when the $M$ and $N$ dimensions are not of the same size and particularly when $M>N$. These results can be produced using the \texttt{q2omegaFR.m} file.
+	 
+ 	\begin{table} [h!]
+		\centering 
+		\begin{tabular}{|c|cccc|} \hline
+		 \diagbox{M}{N} & 16 & 32 & 48 & 64 \\
+		\hline
+		     16 & 1.8350  &  1.9100  &  1.9350  &  1.9500 \\
+    32 & 1.8350  &  1.9100  &  1.9350  &  1.9500 \\ 
+    48 & 1.8350  &  1.9050   & 1.9350   & 1.9500 \\
+    64 & 1.8400  &  1.9050   & 1.9350  &  1.9500 \\
+		 \hline
+		\end{tabular}
+		\begin{tabular}{|c|cccc|} \hline
+		 \diagbox{M}{N} & 16 & 32 & 48 & 64 \\
+		\hline
+		     16 & 1.8350  &  1.9100  &  1.9350  &  1.9500 \\
+    32 & 1.8550  &  1.9100  &  1.9350  &  1.9500 \\ 
+    48 & 1.8700  &  1.9200   & 1.9350   & 1.9500 \\
+    64 & 1.8850  &  1.9200   & 1.9350  &  1.9500 \\
+		 \hline
+		\end{tabular}
+		\caption{Optimal value of $\omega$ using SOR Iteration for various grid sizes. Top is standard iteration. Bottom is reversing the order of the SOR algorithm. i.e. loop in N and then M rather than M and then N}
+		\label{tab:2}
+	\end{table}
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -240,7 +264,7 @@ The centred finite difference approximation of the problem is
 	
 	\item The Multigrid solver for Poisson's Equation in the annulus is contained in various values. \texttt{FullMG.m} takes a boundary condition vector for the Dirichlet condition and matrix $f$ that would solve $\nabla^2 u= f$. It then interpolates from the coarsest grid to the finest grid to find an optimal initial guess. It then performs 1 complete V-cycle to smooth out the errors by calling \texttt{MultiGridV.m}. In each step of the algorithm 10 iterations of Gauss-Seidel are applies for error smoothing. \texttt{interpolate.m} and \texttt{restrict.m} help transform the residuals between grid sizes using a equal weighting nearest neighbour routine. \texttt{FMGV.m} performs a given number of MultiGrid V cycles.  
 	
-	I have implementation the MultiGrid algorithm to solve the same problem as in the previous parts to check it is accuracy and indeed it is exactly the same as Jacobi and SOR. This can be seen in Table BLAH.
+	I have implementation the MultiGrid algorithm to solve the same problem as in the previous parts to check it is accuracy and indeed it is exactly the same as Jacobi and SOR. This can be seen in Table 4.
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	 	\begin{table} [h!]
 		\centering 
@@ -262,7 +286,7 @@ The centred finite difference approximation of the problem is
 		\caption{A plot of the solution of the Test Problem in 3D space with the X-Y axis and the value of $u(r,\theta)$ on the Z axis}
 	\end{figure}
 	
-	Looking at the Table BLAH it is clear that the Jacobi method is the slowest out of all 3 methods for all situations. Just this method should never be utilized unless some form of paralellization is utilized for speed-up. Note that SOR cannot be parallelized and since MultiGrid uses Gauss-Seidel it too cannot be parallelized. In our case however, MultiGrid performs significantly better than SOR (and of course Jacobi) for square grid sizes but not performs worse for large $M$ and small $N$ and on par with Gauss-Seidel for large $N$ and small $M$. This can be attributed to two issues. Firstly for non-square grid sizes, MultiGrid cannot go to the coarsest possible level in both dimension. Secondly, the way our interpolation and restriction function is set up, i.e. with a equal weighting nearest neighbour routine, favours grids that don't have large differences between the distances between grid points in each dimension.
+	Looking at the Table 5 it is clear that the Jacobi method is the slowest out of all 3 methods for all situations. Just this method should never be utilized unless some form of paralellization is utilized for speed-up. Note that SOR cannot be parallelized and since MultiGrid uses Gauss-Seidel it too cannot be parallelized. In our case however, MultiGrid performs significantly better than SOR (and of course Jacobi) for square grid sizes but performs worse for large $M$ and small $N$ and on par with Gauss-Seidel for large $N$ and small $M$. This can be attributed to two issues. Firstly for non-square grid sizes, MultiGrid cannot go to the coarsest possible level in both dimensions. Secondly, the way our interpolation and restriction function is set up, i.e. with a equal weighting nearest neighbour routine, favours grids that don't have large differences between the distances between grid points in each dimension.
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	 \begin{table} [h!]
@@ -298,7 +322,7 @@ The centred finite difference approximation of the problem is
 		\label{tab:2}
 	\end{table}
 
-	\item Given that all 3 algorithm are equally accurate based on the previous tests, I have used a MultiGrid routine to compute the solution for a grid of size $256 \times 256s$ and $b=5$. Complications might arise when dealing with the second problem (b) because the Dirichlet boundary condition is not $2\pi $ periodic as it is of the form $\sin(p \theta)$ but now $p$ is not an integer. 
+	\item Given that all 3 algorithm are equally accurate based on the previous tests, I have used a MultiGrid routine to compute the solution for a grid of size $2^8 \times 2^8$ and $b=5$. Complications might arise when dealing with the second problem (b) because the Dirichlet boundary condition is not $2\pi $ periodic as it is of the form $\sin(p \theta)$ but where $p$ is not an integer. 
 	
 	Produced in \texttt{q4a.m} and \texttt{q4b.m}
 	
@@ -312,7 +336,9 @@ The centred finite difference approximation of the problem is
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-	Looking at the contour and 3D graphs it can be seen that our code does well to model the first scenario. But in the second case where the boundary condition is now $2\pi$ periodic a sharp point occurs at $u(1,0)$ which is not smooth. Looking at the boundary condition it can be seen that it is easy to visualize that why this effect has occurred. Considering only the values between $[0,2\pi)$ the values on both sides of of $f(0)$ at positive. Ultimately, this is not necessarily a problem with the solution produced but rather with the given boundary function in that it has a non smooth point and thus is unlikely to simulate any kind of boundary to be present in a real world annulus.
+	Looking at the contour and 3D graphs it can be seen that our code does well to model the first scenario. But in the second case where the boundary condition is now $2\pi$ periodic a sharp point occurs at $u(1,0)$ which is not smooth. Looking at the boundary condition it can be seen that it is easy to visualize that why this effect has occurred (Figure 8). Considering only the values between $[0,2\pi)$ the values on both sides of of $f(0)$ are positive. In a sense, this can be thought of as a non-smooth force acting at the boundary of the annulus
+	
+	Ultimately, this is not necessarily a problem with the solution found but rather with the given boundary function. It has a non smooth point and thus is unlikely to be representative of any kind of boundary present in a real world annulus.
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\begin{figure}[h!]

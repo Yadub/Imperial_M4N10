@@ -35,7 +35,7 @@ y = R.*sin(Theta);
 
 fig_contour = figure();
 contour(x,y,u(1:M+1,:)');
-title('Estimated Solution: Part b'); xlabel('x'); ylabel('y');
+title('Estimated Solution: Part a'); xlabel('x'); ylabel('y');
 colorbar;
 
 fig_3D = figure();
