@@ -1,6 +1,6 @@
 % Yadu Bhageria
 % 00733164
-b = 10;                 % Chosen value of b
+b = 5;                 % Chosen value of b
 tol = 1e-8;             % Set tolerance
 
 M = 2^6;                % Set M
@@ -30,7 +30,7 @@ for m = 1:M+1
 end
 
 % Compute the solution
-[u, iters] = SOR( u0, 1.95, r, dr, dtheta, -S, tol );
+[u, iters] = SOR( u0, S, 1.95, r, dr, dtheta, tol );
 
 % Get x-y grid
 [R, Theta] = meshgrid(r, theta);
@@ -49,5 +49,5 @@ title('Estimated Solution');
 
 iters
 Error = (U-u(1:M+1, 1:N+1));
-largest_residual = max(max(Error))
+largest_difference = max(max(Error))
 

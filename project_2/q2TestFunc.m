@@ -1,10 +1,10 @@
-% Yadu Bhageria
-% 00733164
-b = 5;                 % Chosen value of b
-tol = 1e-8;             % Set tolerance
+function [avgError, iters, timetaken, u] = q2TestFunc( b, M, N, w, tol, p, reverse)
+% Gets the avgError, iterations, timetaken, and solution u for the 
+% test function described in the report
 
-M = 2^6;                % Set M
-N = 2^7;                % Set N
+if nargin < 5, tol = 1e-8; end  % Set tol
+if nargin < 6, p = 2; end       % Set p
+if nargin < 7, reverse = false; end
 
 dr = (b - 1) / M;       % Set delta
 dtheta = 2 * pi / N;    % Set delta theta
@@ -12,7 +12,6 @@ dtheta = 2 * pi / N;    % Set delta theta
 r = 1:dr:b;             % Initialize r array
 theta = 0:dtheta:2*pi;  % Initialize theta array
 
-p = 3;                  % Set value of p
 u0 = zeros(M+2,N+1);    % Initialize initial u
 u0(1,1:N) = (1 - b)^2 * sin( p * theta(1:N) ); % BC: u(1,theta)
 u0(M+2,:) = u0(M,:);    % BC: Insulation (Neumann)
@@ -28,26 +27,16 @@ for m = 1:M+1
         * sin(p * theta(n)) / r(m);
   end
 end
-
 % Compute the solution
-[u, iters] = Jacobi( u0, S, r, dr, dtheta, tol );
+tic;
+if reverse
+    [u, iters] = SOR_reverse( u0, S, w, r, dr, dtheta, tol);
+else
+    [u, iters] = SOR( u0, S, w, r, dr, dtheta, tol);
+end
+timetaken = toc;
+% Compute the error
+Error = ( U(1:M+1, 1:N) - u(1:M+1, 1:N) );
+avgError = mean(mean(abs(Error)));
 
-% Get x-y grid
-[R, Theta] = meshgrid(r, theta);
-x = R.*cos(Theta);
-y = R.*sin(Theta);
-
-% Plot solution
-fig_main = figure();
-subplot(1,2,1);
-contour(x,y,U(1:M+1, 1:N+1)', 50);
-title('Exact Solution');
-
-subplot(1,2,2);
-contour(x,y,u(1:M+1, 1:N+1)', 50);
-title('Estimated Solution');
-
-iters
-Error = (U-u(1:M+1, 1:N+1));
-largest_difference = max(max(Error))
-
+end
