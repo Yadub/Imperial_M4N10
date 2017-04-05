@@ -1,4 +1,4 @@
-function res = T_residual(T, f, dt, dr, dtheta, r)
+function res = T_residual(T, f, dt, dr, dtheta, r, k)
 % Computes the residuals for the Poisson equation in an annulus 
 % D^2 T = f given delta r, delta theta, and vector of r values
 % Editted code taken from Blackboard done by Dr Mestel
@@ -7,9 +7,9 @@ function res = T_residual(T, f, dt, dr, dtheta, r)
 [Mp1,N] = size(T);  
 M = Mp1 - 1;
 % Coefficients for diffusion equation %%%%%%% Need Kappa???? %%%%%%%%%%
-rr = dt/2/dr;
-rr2 = rr/dr;
-rtheta = dt/2/dtheta/dtheta;
+rr = k * dt / 2 / dr;
+rr2 = rr / dr;
+rtheta = k * dt / 2 / dtheta / dtheta;
 % Array of interest
 a0toNm1 = [N 1:N-1];
 a2toNp1 = mod(1:N,N) + 1;

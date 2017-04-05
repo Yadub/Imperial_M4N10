@@ -1,4 +1,4 @@
-function T = T_GaussSeidel( T, f, dt, dr, dtheta, r, iters  )
+function T = T_GaussSeidel( T, f, dt, dr, dtheta, r, iters, k)
 % Computes an estimate u given initial guess u0 for the Poisson Equation
 % in an annulus defined by delta r, delta theta, and the vector of r values
 % Smooths for #iters
@@ -7,9 +7,9 @@ function T = T_GaussSeidel( T, f, dt, dr, dtheta, r, iters  )
 [Mp1,N] = size(T);  
 M = Mp1 - 1;
 % Coefficients for diffusion equation %%%%%%% Need Kappa???? %%%%%%%%%%
-dtdr = dt/2/dr;
-dr2 = dtdr/dr;
-rtheta = dt/2/dtheta/dtheta;
+dtdr = k * dt / 2 / dr;
+dr2 = dtdr / dr;
+rtheta = k * dt / 2 / dtheta / dtheta;
 % Array of interest
 a0toNm1 = [N 1:N-1];
 a2toNp1 = mod(1:N,N) + 1;

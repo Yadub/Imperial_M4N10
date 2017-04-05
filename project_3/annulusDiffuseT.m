@@ -1,14 +1,16 @@
-function [ T ] = annulusDiffuseT( T, dt, dr, dtheta, r )
+function [ T ] = annulusDiffuseT( T, dt, dr, dtheta, r, k )
 %ANNULUSDIFFUSET: Pure diffusion of the temperature by taking a 
 %                   Crank Nicolson step in the annulus
 
-rhs = T + dt * T_delsqr(T, dr, dtheta, r) / 2;
+if nargin < 6, k = 1; end
+
+rhs = T + .5* dt * k * T_delsqr(T, dr, dtheta, r);
 
 tol = 1e-10;
 maxres = 1;
 while maxres > tol
-    T = T_MultiGridV( T, rhs, dt, dr, dtheta, r);
-    res = T_residual( T, rhs, dt, dr, dtheta, r);
+    T = T_MultiGridV( T, rhs, dt, dr, dtheta, r, k);
+    res = T_residual( T, rhs, dt, dr, dtheta, r, k);
     maxres = max(max(abs(res)));
 end
 

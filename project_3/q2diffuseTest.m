@@ -48,6 +48,6 @@ for istep=1:tstep
        drawnow
        pause(1)
     end
-    % Advection step for temperature  
+    % Diffusion step for temperature  
     Q = annulusDiffuseT(Q, dt, dr, dtheta, r);
 end
