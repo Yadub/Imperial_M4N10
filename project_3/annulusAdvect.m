@@ -72,12 +72,13 @@ Gtp = Qtp .* vtp ./ rrp;
 % Finally, 2nd half time-step with periodic theta
 Qnew(2:M,1:N) = Q(2:M,:) - sr * ( Frp(2:M,:) - Frp(1:M-1,:) ) ...
                            - stheta * ( Gtp(2:M,:) - Gtp(2:M,aNtoNm1) );
-% Now y-edges G=0 on boundary
-Qnew(1,1:N) = Q(1,:) - sr * ( Frp(1,:) ) - stheta * ( Gtp(1,:) - Gtp(1,aNtoNm1) );
-Qnew(M+1,1:N) = Q(M+1,:) - sr * ( - Frp(M,:) ) - stheta * ( Gtp(M+1,:) - Gtp(M+1,aNtoNm1) );
 
-% Needed???
-% Qnew(1,:) = Q(1,:);
-% Qnew(M+1,:) = Q(M+1,:);
+% Now y-edges G=0 on boundary: Needed???
+% Qnew(1,1:N) = Q(1,:) - sr * ( Frp(1,:) ) - stheta * ( Gtp(1,:) - Gtp(1,aNtoNm1) );
+% Qnew(M+1,1:N) = Q(M+1,:) - sr * ( - Frp(M,:) ) - stheta * ( Gtp(M+1,:) - Gtp(M+1,aNtoNm1) );
+
+% Don't change r = 1 and r = b boundary.
+Qnew(1,:) = Q(1,:);
+Qnew(M+1,:) = Q(M+1,:);
 
 end
