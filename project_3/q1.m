@@ -51,7 +51,7 @@ for istep=1:tstep
        drawnow
     end
     % Advection step for temperature  
-    Q = annulusAdvectL(ur, utheta, Q, dt, dr , dtheta);
+    Q = annulusAdvect(ur, utheta, Q, dt, dr , dtheta);
 
 end
 % Advect backwards in time
@@ -70,7 +70,7 @@ for istep=1:tstep
        drawnow
     end
     % Advection step for temperature  
-    Q = annulusAdvectL(ur, utheta, Q, -dt, dr , dtheta);
+    Q = annulusAdvect(ur, utheta, Q, -dt, dr , dtheta);
 end
 % Check error
 Diff = Q0 - Q;
