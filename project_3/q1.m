@@ -1,17 +1,17 @@
 
 % Domain and grid size
-b =  5;
+b =  2;
 M = 2^5;                % Set M
 N = 2^6;                % Set N
 dr = (b - 1) / M;       % Set delta r
 dtheta = 2 * pi / N;    % Set delta theta
-ipic = 1000;              % How many steps between pictures
-dt = 0.01*min(dr,dtheta);   % Set timestep
-tstep = 20000;           % Number of time-steps 
+ipic = 1000;            % How many steps between pictures
+dt = .01*min(dr,dtheta);% Set timestep
+tstep = 20000;          % Number of time-steps 
 
-ur  = zeros(M+1,N);       % Velocity: r component
-utheta  = zeros(M+1,N);   % Velocity: theta component
-Q  = zeros(M+1,N);        % Scalar field
+ur  = zeros(M+1,N);     % Velocity: r component
+utheta  = zeros(M+1,N); % Velocity: theta component
+Q  = zeros(M+1,N);      % Scalar field
 
 % Start with some non uniform scalar field
 Q = annulusTinit(Q, dr, dtheta);
