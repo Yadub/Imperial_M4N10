@@ -1,4 +1,4 @@
-function [] = plotAnnulusVectorField( ur, utheta, r, theta, fig )
+function [] = plotAnnulusVectorField( ur, utheta, R, Theta, xx, yy, fig )
 %PLOTANNULUSVECTORFIELD: 
 %       Plots a vector field in the annulus for give r-theta
 %           components of the field with grid vector r and theta. 
@@ -7,17 +7,12 @@ function [] = plotAnnulusVectorField( ur, utheta, r, theta, fig )
 [Mp1, N] = size(ur);
 M = Mp1 - 1;
 
-if nargin < 5
+if nargin < 7
     fig = figure();
 end
 % Set figure
 figure(fig);
-% Get x-y coordinates
-[R, Theta] = meshgrid(r, theta);
-xx = R.*cos(Theta);
-yy = R.*sin(Theta);
-size(ur)
-size(Theta)
+
 % Compute x-y Vector Field components
 rper = zeros(M+1,N+1);
 rper(:,1:N) = ur;

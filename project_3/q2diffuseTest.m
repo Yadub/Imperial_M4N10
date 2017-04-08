@@ -1,16 +1,13 @@
-
 % Domain and grid size
 b =  5;
-M = 2^5;                % Set M
-N = 2^6;                % Set N
+M = 2^6;                % Set M
+N = 2^7;                % Set N
 dr = (b - 1) / M;       % Set delta r
 dtheta = 2 * pi / N;    % Set delta theta
 ipic = 50;              % How many steps between pictures
 dt = .01*min(dr,dtheta);% Set timestep
 tstep = 1000;           % Number of time-steps 
 
-ur  = zeros(M+1,N);     % Velocity: r component
-utheta  = zeros(M+1,N); % Velocity: theta component
 Q  = zeros(M+1,N);      % Scalar field
 Q(1,:) = 1;             % Start with values of 1 on r=1 and 0 everywhere else
 
@@ -31,11 +28,11 @@ yy = R.*sin(Theta);
 Q0 = Q;
 % Start figure
 fig_advect = figure();
-% Advect forward in time
+% Diffuse forward in time
 for istep=1:tstep
     % Plot
-    if ((mod(istep,ipic)==0)|(istep==1)) 
-       istep
+    if ((mod(istep,ipic)==0)||(istep==1)) 
+       display(istep)
        figure(fig_advect) 
        Tplot = zeros(M+1,N+1);
        Tplot(:,1:N) = Q(:,1:N);
