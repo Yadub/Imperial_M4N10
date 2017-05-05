@@ -1,7 +1,7 @@
 function psiOut = psi_MultiGridV(psiIn, f, dr, dtheta, r)
 % Multigrid V-cycle for Diffusion equation  
 % Performs 1 multigrid V cycle for the Poisson equation in an annulus,
-% D^2 u = f, given a starting guess Tin for delta r, delta theta, vector r
+% D^2 psi = -omega, given a starting guess psiIN for delta r, delta theta, vector r
 % ( M has to be of the form 2^k + 1)                                                                       
 %       Tin:  guessed solution (M+1 x N)-matrix                        
 %       f:    right-hand side  (M+1 x N)-matrix                        
@@ -9,7 +9,7 @@ function psiOut = psi_MultiGridV(psiIn, f, dr, dtheta, r)
 %       dr:   r-step
 %       dtheta: theta-step
 %       r:    r values (M+1)-vector
-% No need to consider boundary conditions seperately for T and residuals as
+% No need to consider boundary conditions seperately for psi and residuals as
 % a simple boundary of psi = 0 at r = 1 and psi = 0 at r = b is present
 
 % Editted code taken from Blackboard done by Dr Mestel

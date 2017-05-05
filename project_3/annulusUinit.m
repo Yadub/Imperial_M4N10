@@ -11,8 +11,8 @@ for m = 2:M
     rm = r(m);
     for n = 1:N
         theta = dtheta * (n-1);
-        psi(m, n) = cos(theta)^2 * (rm - b)^2 * (rm - 1)^2 * exp(- rm) ;
-%         psi(m, n) =  exp(-sqrt( (rm - rc)^2 + (theta-pi)^2 )) * sin(theta) * (rm-b) * (rm-1);
+        psi(m, n) =  (rm - b)^2 * (rm - 1)^2 * exp(sin(2*theta));
+%         psi(m, n) =  exp( - sqrt( (rm - rc)^2 + (theta-pi)^2 ) ) * (rm-b)^2 * (rm-1)^2;
 %         psi(m, n) =  - exp( -(rm - rc)^2 - (theta - pi)^2 ) * (rm - b) * (rm - 1);
     end
 end

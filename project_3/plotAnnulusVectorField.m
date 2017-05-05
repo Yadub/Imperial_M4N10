@@ -7,11 +7,8 @@ function [] = plotAnnulusVectorField( ur, utheta, R, Theta, xx, yy, fig )
 [Mp1, N] = size(ur);
 M = Mp1 - 1;
 
-if nargin < 7
-    fig = figure();
-end
-% Set figure
-figure(fig);
+% Set figure if specified
+if nargin == 7, figure(fig); end
 
 % Compute x-y Vector Field components
 rper = zeros(M+1,N+1);

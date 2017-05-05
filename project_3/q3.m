@@ -1,25 +1,31 @@
-% Parameters (Rayleigh number, Prandtl number, kappa)
-Ra = 1000;
-Pr = .7;
+% Parameters (rPrandtl number)
+Pr = 1;
 
 % Domain and grid size
-b =  5;
-M = 2^5;                % Set M
-N = 2^6;                % Set N
+b =  2;
+M = 2^6;                % Set M
+N = 2^8;                % Set N
 dr = (b - 1) / M;       % Set delta r
 dtheta = 2 * pi / N;    % Set delta theta
 r = 1:dr:b;             % Initialize r array
 theta = 0:dtheta:2*pi;  % Initialize theta array
 ipic = 50;              % How many steps between pictures
 dt = .01*min(dr,dtheta);% Set timestep
-tstep = 1000;           % Number of time-steps 
+istep = 0;              % Number of time-steps 
 
 % Initalize matrices 
 ur = zeros(M+1,N);
 utheta = zeros(M+1,N);
 psi = zeros(M+1,N);
 omega = zeros(M+1,N);
-td  = zeros(M+1,N);
+% Set omega
+omega = annulusTinit(omega, dr, dtheta, 2.5);
+
+F  = zeros(M+1,N);
+% Set the forcing function
+F = annulusTinit(F, dr, dtheta, 1);
+% Dont need F to have values of 1 on the boundary
+F(1,:) = 0;
 
 % For plotting
 % Get x-y grid
@@ -27,19 +33,34 @@ td  = zeros(M+1,N);
 xx = R.*cos(Theta);
 yy = R.*sin(Theta);
 fig_ufield = figure();
+fig_stream = figure();
+fig_omega = figure();
+fig_F = figure();
 
-% Save old bouancy term
-omegaRhs = td;
+% Plot the starting omega function
+plotAnnulusScalarField( omega, xx, yy, fig_omega );
+title('Q3: Starting omega');
+
+% Plot the forcing function
+plotAnnulusScalarField( F, xx, yy, fig_F );
+title('Q3: Forcing function');
+
 % Start figure
-fig_advect = figure();
-% Advect forward in time
-for istep=1:tstep
+
+% Set residual
+res = 1;
+% Set tolerance
+tol = 1e-10;
+% Advect and then Diffuse forward in time
+while res > tol
+    % Save current omega for residual comaprison
+    omegaOld = omega;
     % Advection step for vorticity
     omega = annulusAdvect(ur, utheta, omega, dt, dr , dtheta);   
     % Diffusion step for vorticity
-    omega = annulusDiffuseOmega( omega, omegaRhs, psi, dt, dr , dtheta, r, Pr);
+    omega = omega_Diffuse( omega, F, psi, dt, dr , dtheta, r, Pr);
     % Solve Poisson equation for streamfunction, psi
-    psi = annulusPsiEqn(psi, -omega, dr, dtheta, r);
+    psi = psi_Eqn(psi, -omega, dr, dtheta, r);
     % Derive the new velocity field from the new stream function
     [ur, utheta] = annulusVelocity(psi, dr, dtheta, r);
 
@@ -51,19 +72,32 @@ for istep=1:tstep
     dtCFL = .8 * min(dr,dtheta) / max(1,velmax);    
     % Print courant number when it becomes smaller than dt
     if (dt > dtCFL)
-        fprintf('Dangerous Courant number, %i\n', Courant);
+        fprintf('Dangerous Courant number! %i\n', Courant);
+        fprintf('dt: %i, ', dt);
+        fprintf('dtCFL: %i\n', dtCFL);
     end
     
-    % Plot Temperature Field and Velocity field
-    if ((mod(istep,ipic)==0)||(istep==1)) 
+    % Plot
+    if ((mod(istep,ipic)==0)) 
        display(istep)
-       plotAnnulusScalarField(psi, xx, yy, fig_advect);
+       plotAnnulusScalarField( omega, xx, yy, fig_omega );
+       plotAnnulusScalarField(psi, xx, yy, fig_stream);
        plotAnnulusVectorField(ur, utheta, R, Theta, xx, yy, fig_ufield);
     end
     
+    % Compute the residual between iterations
+    res = max(max(abs(omega - omegaOld)));
+    % Iterate number of steps
+    istep = istep + 1;
 end
 
+% Plot final vorticity
+plotAnnulusScalarField(omega, xx, yy, fig_omega);
+title('Q3: Final Vorticity')
 % Plot final streamfunction
-fig_stream = figure(); 
 plotAnnulusScalarField(psi, xx, yy, fig_stream);
+title('Q3: Final Stream Function')
+% Plot the final velocity Field
+plotAnnulusVectorField(ur, utheta, R, Theta, xx, yy, fig_ufield);
+title('Q3: Final Velocity Function')
 

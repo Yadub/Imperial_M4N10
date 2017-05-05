@@ -9,7 +9,7 @@ M = Mp1 - 1;
 % omega(1,:)    = 2 * psi(2,:) / dr / dr;  
 % omega(M+1,:)  = 2 * psi(M,:) / dr / dr;  
 
-% A more accurate difference scheme? Need to confirm whether it works.
+% A more accurate difference scheme. From Lecture 20.
 omega(1  ,:)  = ( - 4 * psi(2,:) + .5 * psi(3  ,:) ) / dr / dr ;  
 omega(M+1,:)  = ( - 4 * psi(M,:) + .5 * psi(M-1,:) ) / dr / dr ;    
 

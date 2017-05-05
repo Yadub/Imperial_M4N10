@@ -3,7 +3,7 @@ function omegaOut = omega_MultiGridV(omegaIn, f, psi, dt, dr, dtheta, r, Pr, Mma
 % Performs 1 multigrid V cycle for the Poisson equation in an annulus,
 % D^2 u = f, given a starting guess Tin for delta r, delta theta, vector r
 % ( M has to be of the form 2^k + 1)                                                                       
-%       Tin:  guessed solution (M+1 x N)-matrix                        
+%       omegain:  guessed solution (M+1 x N)-matrix                        
 %       f:    right-hand side  (M+1 x N)-matrix                        
 %       dt:   time-step
 %       dr:   r-step

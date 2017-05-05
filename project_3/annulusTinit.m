@@ -13,8 +13,10 @@ for i = 1:M
     r = 1 + dr * (i-1);
     for j = 1:N
         theta = dtheta * (j-1);
-        if q == 1, T(i,j) = .01 * sin(pi*r) * sin(theta); end
-        if q == 2, T(i,j) = exp( - sqrt( (r - rc)^2 + (theta - pi).^2) ); end
+        T(i,j) = sin(pi*r) * sin(theta);
+        if q == 1, T(i,j) = .01 * T(i,j); end
+        if q == 2.5, T(i,j) = sin(pi*r)^2 * sin(theta)^2 + (r-b)/(1-b) ; end
+%         if q == 2, T(i,j) = exp( - sqrt( (r - rc)^2 + (theta - pi).^2) ); end
 %         if q == 2, T(i,j) =  sin(theta) * exp( - (r - b) * (r - 1) ); end
     end
 end

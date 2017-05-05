@@ -18,10 +18,10 @@ res = zeros(size(psi));   % Initalize matrix to store residuals
 for m = 2:M
     r2dt2 = rtheta / r(m)^2;
     rdr = rr / r(m) / 2;
-    sumdr2dt2 = 2 * (rr2 + r2dt2) + 1;
+    sumdr2dt2 = 2 * (rr2 + r2dt2);
     % Compute values periodic in theta
-    res(m, :) = f(m,:) - sumdr2dt2 * psi(m,:) + (rr2 + rdr) * psi(m+1, :) ...
-            + (rr2 - rdr) * psi(m-1, :) + r2dt2 * ( psi(m, a2toNp1) + psi(m, a0toNm1) );
+    res(m, :) = f(m,:) + sumdr2dt2 * psi(m,:) - ( (rr2 + rdr) * psi(m+1, :) ...
+            + (rr2 - rdr) * psi(m-1, :) + r2dt2 * ( psi(m, a2toNp1) + psi(m, a0toNm1) ) );
 end
 
 end
